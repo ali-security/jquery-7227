@@ -28,7 +28,7 @@ matrix:
       
 before_install:
   # Download historically accurate Chromium ~v64 (Jan 2018)
-  - wget https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F560467%2Fchrome-linux.zip?generation=1526957952075076&alt=media
+  - wget -O chrome-linux.zip "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F560467%2Fchrome-linux.zip?generation=1526957952075076&alt=media"
   - unzip chrome-linux.zip
   # Ensure the extracted binary has execution permissions
   - chmod +x $TRAVIS_BUILD_DIR/chrome-linux/chrome
