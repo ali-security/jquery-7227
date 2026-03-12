@@ -2,7 +2,6 @@ language: node_js
 # Temporary workaround.
 # Karma can't access the binaries on travis
 # without root access.
-# See https://github.com/travis-ci/travis-ci/issues/8836
 sudo: required
 node_js:
   - "4"
@@ -10,12 +9,15 @@ node_js:
   - "8"
   - "9"
 
+addons:
+  # We put this back ONLY so Travis installs the required Linux graphical libraries
+  chrome: stable
+
 env:
   global:
-    # This makes the path available to ALL jobs in the matrix
-    - CHROME_BIN=$PWD/chrome-linux/chrome
+    # Use TRAVIS_BUILD_DIR to guarantee the absolute path is correct
+    - CHROME_BIN=$TRAVIS_BUILD_DIR/chrome-linux/chrome
   matrix:
-    # This runs by default on the 4, 6, 8, and 9 environments
     - NPM_SCRIPT=test:browserless
 
 matrix:
@@ -29,7 +31,7 @@ before_install:
   - wget https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/520840/chrome-linux.zip
   - unzip chrome-linux.zip
   # Ensure the extracted binary has execution permissions
-  - chmod +x $PWD/chrome-linux/chrome
+  - chmod +x $TRAVIS_BUILD_DIR/chrome-linux/chrome
 
 script:
   - npm run $NPM_SCRIPT
