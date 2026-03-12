@@ -5,18 +5,31 @@ language: node_js
 # See https://github.com/travis-ci/travis-ci/issues/8836
 sudo: required
 node_js:
-- "4"
-- "6"
-- "8"
-- "9"
-addons:
-  chrome: stable
+  - "4"
+  - "6"
+  - "8"
+  - "9"
+
 env:
-  - NPM_SCRIPT=test:browserless
+  global:
+    # This makes the path available to ALL jobs in the matrix
+    - CHROME_BIN=$PWD/chrome-linux/chrome
+  matrix:
+    # This runs by default on the 4, 6, 8, and 9 environments
+    - NPM_SCRIPT=test:browserless
+
 matrix:
   include:
     # Run browser tests only on one Node.js version to save time.
     - node_js: "8"
       env: NPM_SCRIPT=test:browser
+      
+before_install:
+  # Download historically accurate Chromium ~v64 (Jan 2018)
+  - wget https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/520840/chrome-linux.zip
+  - unzip chrome-linux.zip
+  # Ensure the extracted binary has execution permissions
+  - chmod +x $PWD/chrome-linux/chrome
+
 script:
   - npm run $NPM_SCRIPT
